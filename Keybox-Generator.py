@@ -5,7 +5,7 @@
 import argparse, os, re, secrets, shutil, subprocess
 
 INFO = {
-    "version": "1.2",
+    "version": "1.3",
     "author": "VD_Priv8 (VD171)",
     "github": "https://github.com/VD171",
     "telegram": "https://t.me/VD_Priv8"
@@ -25,7 +25,7 @@ def main():
     vd_args = vd_parser.parse_args()
 
     if not shutil.which("openssl"):  
-        exit("Error: OpenSSL not found! Try running in Termux!")
+        exit("Error: openssl not found! Be sure to run: pkg install openssl-tool")
 
     if not os.path.exists(vd_args.file):
         exit(f"Error: File '{vd_args.file}' not found! Use: --file")
@@ -48,7 +48,7 @@ def main():
     with open(vd_args.file, encoding="utf-8") as vd_file:
         vd_content = vd_file.read()
 
-    vd_content = re.sub(r"[\r\n]*\s*<Key algorithm=\"rsa\">.*?</Key>(\s*[\r\n]*)", r"\1", vd_content, flags=re.DOTALL)
+    vd_content = re.sub(r"\s*<Key algorithm=\"rsa\">.*?</Key>(\s*)", r"\1", vd_content, flags=re.DOTALL)
     if "<Key algorithm=\"ecdsa\">" not in vd_content:
         exit("Error: ECDSA Key not found!")
 
@@ -60,11 +60,11 @@ def main():
         exit("Error: Missing required elements!")
 
     vd_new_key = subprocess.run("openssl ecparam -name prime256v1 -genkey", shell=True, capture_output=True, text=True, check=True).stdout.strip()
-    vd_new_key = re.search(r"(-----BEGIN EC PRIVATE KEY-----.*?-----END EC PRIVATE KEY-----)", vd_new_key, re.DOTALL).group(1)
+    vd_new_key = re.search(r"(-----BEGIN (EC )?PRIVATE KEY-----.*?-----END (EC )?PRIVATE KEY-----)", vd_new_key, re.DOTALL).group(1)
 
     for vd_temp, vd_data in {vd_temp_key: vd_key.group(1), vd_temp_cert: vd_cert.group(2), vd_temp_new_key: vd_new_key}.items():
         with open(vd_temp, "w") as vd_file:
-            vd_file.write(re.sub(r"^\s+|\s+$", "", re.sub(r"\s*([\r\n]+)\s*", r"\1", vd_data)))
+            vd_file.write(re.sub(r"\s*([\r\n]+)\s*", r"\1", vd_data).strip())
         if not os.path.exists(vd_temp):
             exit(f"Error: Can't create {vd_temp}!")
 
