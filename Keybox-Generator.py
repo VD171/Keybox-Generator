@@ -1,7 +1,6 @@
 # Copyright (C) 2025 VD_Priv8 (VD171)
 # This code is licensed under GNU AGPLv3 (https://www.gnu.org/licenses/agpl-3.0.html).
 # See the LICENSE file for details.
-# peew paw
 
 import argparse, os, re, secrets, shutil, subprocess
 
