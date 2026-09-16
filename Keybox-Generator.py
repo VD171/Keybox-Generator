@@ -7,8 +7,12 @@ import argparse, os, re, secrets, shutil, subprocess
 INFO = {
     "version": "1.3",
     "author": "VD_Priv8 (VD171)",
+    "site": "https://vd171.ru",
     "github": "https://github.com/VD171",
-    "telegram": "https://t.me/VD_Priv8"
+    "telegram": "https://t.me/VD_Priv8",
+    "discord": "https://discord.com/users/1296831918989639721",
+    "email": "vd.priv8@pm.me",
+    "xda": "https://xdaforums.com/m/vd171.4699873/"
 }
 
 def vd_random_serial():
